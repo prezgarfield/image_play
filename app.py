@@ -5,9 +5,9 @@ from pathlib import Path
 def amIrunning():
     print("Starting Program")
 
-def getVidCap():
+def getVidCap(fname):
     # Playing video from file:
-    cap = cv2.VideoCapture('sympathy3.mp4')
+    cap = cv2.VideoCapture(fname)
 
     try:
         if not os.path.exists('data'):
@@ -100,5 +100,5 @@ if __name__ == '__main__':
     amIrunning()
     AveragePixels2()
     MedianPixels3()
-    #getVidCap()
+    getVidCap('driveclip1.mp4')
     exit()
