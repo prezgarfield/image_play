@@ -34,25 +34,27 @@ def getVidCap(fname):
 
 def MedianPixels3(pth):
 
-    allfiles = os.listdir(os.getcwd())
-    #allfiles = os.listdir(pth)
+    #allfiles = os.listdir(os.getcwd())
+    allfiles = os.listdir(pth)
+    print(pth)
     print(allfiles)
     imlist = [filename for filename in allfiles if filename[-4:] in [".jpg"]]
 
     # Alternative method using numpy mean function
-    images = numpy.array([numpy.array(Image.open(fname)) for fname in imlist])
+    images = numpy.array([numpy.array(Image.open(str(pth) + '/' + fname)) for fname in imlist])
     arr = numpy.array(numpy.median(images, axis=(0)), dtype=numpy.uint8)
     out = Image.fromarray(arr)
     out.save("median.jpg")
     out.show()
 
 def AveragePixels2(pth):
-    allfiles = os.listdir(os.getcwd())
+    #allfiles = os.listdir(os.getcwd())
+    allfiles = os.listdir(pth)
     print(allfiles)
     imlist = [filename for filename in allfiles if filename[-4:] in [".jpg"]]
 
     # Alternative method using numpy mean function
-    images = numpy.array([numpy.array(Image.open(fname)) for fname in imlist])
+    images = numpy.array([numpy.array(Image.open(str(pth) + '/' + fname)) for fname in imlist])
     arr = numpy.array(numpy.mean(images, axis=(0)), dtype=numpy.uint8)
     out = Image.fromarray(arr)
     out.save("mean.jpg")
