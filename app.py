@@ -16,9 +16,13 @@ def getVidCap(fname):
         print('Error: Creating directory of data')
 
     currentFrame = 0
-    while (currentFrame < 350):
+
+    while (True):
         # Capture frame-by-frame
         ret, frame = cap.read()
+
+        if not ret:
+            break
 
         # Saves image of the current frame in jpg file
         name = './data/frame' + str(currentFrame) + '.jpg'
@@ -84,7 +88,7 @@ def setpath(pth):
 
 if __name__ == '__main__':
     amIrunning()
+    getVidCap('sympathy_short.mp4')
     AveragePixels2(setpath('data'))
-    #MedianPixels3(setpath('data'))
-    #getVidCap('driveclip1.mp4')
+    MedianPixels3(setpath('data'))
     exit()
