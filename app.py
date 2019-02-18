@@ -1,3 +1,4 @@
+#note: PIL is no longer maintained.  You need to load the Pillow library, forked from the original PIL.
 import os, numpy, PIL, cv2
 from PIL import Image
 from pathlib import Path
