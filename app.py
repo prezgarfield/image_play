@@ -36,17 +36,48 @@ def getVidCap(fname):
     cap.release()
     cv2.destroyAllWindows()
 
-def MedianPixels3(pth):
+def MedianPixels3(pth, slice):
 
     #allfiles = os.listdir(os.getcwd())
     allfiles = os.listdir(pth)
-    print(pth)
-    print(allfiles)
+    #print(pth)
+    #print(allfiles)
     imlist = [filename for filename in allfiles if filename[-4:] in [".jpg"]]
+    numSlices = int(len(imlist) / slice)
+    # only process if we have enough images
+    if not numSlices:
+        return
+    i = 0
+    slices = []
+    images = []
+    while i < numSlices:
+        for fname in imlist[i*numSlices:(i*numSlices)+numSlices]:
+            images.append([numpy.array(Image.open(str(pth)+ '/'+fname))])
+        i = i+1
+    i = 0
+    while i < numSlices:
+        slices.append(images[i*numSlices:(i*numSlices)+numSlices])
+        print(slices[i])
+        i = i + 1
+    # Alternative method using numpy median function
+    #return
+    #images = numpy.array([numpy.array(Image.open(str(pth) + '/' + fname)) for fname in imlist])
 
-    # Alternative method using numpy mean function
-    images = numpy.array([numpy.array(Image.open(str(pth) + '/' + fname)) for fname in imlist])
-    arr = numpy.array(numpy.median(images, axis=(0)), dtype=numpy.uint8)
+    imgSlices = []
+
+    #     print(numSlices)
+    # print(len(slices))
+    # print(slices[numSlices-1])
+    arr = []
+    for slc in slices:
+        arr = numpy.array(numpy.median(slc, axis=(0)), dtype=numpy.uint8)
+        imgSlices.append(arr)
+    out = Image.fromarray(arr)
+    #out.save('test.jpg')
+    out.show()
+    return
+    for slc in imgSlices:
+        arr = numpy.array(numpy.median(slc, axis=(0)), dtype=numpy.uint8)
     out = Image.fromarray(arr)
     out.save("median.jpg")
     out.show()
@@ -88,7 +119,7 @@ def setpath(pth):
 
 if __name__ == '__main__':
     amIrunning()
-    getVidCap('sympathy_short.mp4')
-    AveragePixels2(setpath('data'))
-    MedianPixels3(setpath('data'))
+    #getVidCap('driveclip1.mp4')
+    #AveragePixels2(setpath('data'))
+    MedianPixels3(setpath('data'), 25)
     exit()
