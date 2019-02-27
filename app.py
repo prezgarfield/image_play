@@ -37,7 +37,6 @@ def getVidCap(fname):
     cv2.destroyAllWindows()
 
 def MedianPixels3(pth, slice):
-
     #allfiles = os.listdir(os.getcwd())
     allfiles = os.listdir(pth)
     #print(pth)
@@ -51,35 +50,73 @@ def MedianPixels3(pth, slice):
     slices = []
     images = []
     while i < numSlices:
-        for fname in imlist[i*numSlices:(i*numSlices)+numSlices]:
-            images.append([numpy.array(Image.open(str(pth)+ '/'+fname))])
+        print(i)
+        for fname in imlist[i*numSlices:(i*numSlices)+numSlices-1]:
+            images.append(numpy.array(Image.open(str(pth) + '/'+fname)))
+        arr = numpy.array(numpy.median(images, axis=(0)), dtype=numpy.uint8)
+        out = Image.fromarray(arr)
+        try:
+            if not os.path.exists('data/medianstaging'):
+                os.makedirs('data/medianstaging')
+        except OSError:
+            print('Error: Creating directory of data')
+
+        out.save('data/medianstaging/image'+ str(i)+'.jpg')
+        images=[]
+        #out.show()
         i = i+1
+
+def MeanPixels3(pth, slice):
+    #allfiles = os.listdir(os.getcwd())
+    allfiles = os.listdir(pth)
+    #print(pth)
+    #print(allfiles)
+    imlist = [filename for filename in allfiles if filename[-4:] in [".jpg"]]
+    numSlices = int(len(imlist) / slice)
+    # only process if we have enough images
+    if not numSlices:
+        return
     i = 0
+    slices = []
+    images = []
     while i < numSlices:
-        slices.append(images[i*numSlices:(i*numSlices)+numSlices])
-        print(slices[i])
-        i = i + 1
-    # Alternative method using numpy median function
-    #return
-    #images = numpy.array([numpy.array(Image.open(str(pth) + '/' + fname)) for fname in imlist])
+        print(i)
+        for fname in imlist[i*numSlices:(i*numSlices)+numSlices-1]:
+            images.append(numpy.array(Image.open(str(pth) + '/'+fname)))
+        arr = numpy.array(numpy.mean(images, axis=(0)), dtype=numpy.uint8)
+        out = Image.fromarray(arr)
+        try:
+            if not os.path.exists('data/meanstaging'):
+                os.makedirs('data/meanstaging')
+        except OSError:
+            print('Error: Creating directory of data')
 
-    imgSlices = []
+        out.save('data/meanstaging/image'+ str(i)+'.jpg')
+        images=[]
+        #out.show()
+        i = i+1
 
-    #     print(numSlices)
-    # print(len(slices))
-    # print(slices[numSlices-1])
-    arr = []
-    for slc in slices:
-        arr = numpy.array(numpy.median(slc, axis=(0)), dtype=numpy.uint8)
-        imgSlices.append(arr)
-    out = Image.fromarray(arr)
-    #out.save('test.jpg')
-    out.show()
-    return
-    for slc in imgSlices:
-        arr = numpy.array(numpy.median(slc, axis=(0)), dtype=numpy.uint8)
+
+def medianComplete():
+    newpath = setpath('data/medianstaging')
+    allfiles = os.listdir(newpath)
+    print(newpath)
+    imlist = [filename for filename in allfiles if filename[-4:] in [".jpg"]]
+    images = numpy.array([numpy.array(Image.open(str(newpath) + '/' + fname)) for fname in imlist])
+    arr = numpy.array(numpy.median(images, axis=(0)), dtype=numpy.uint8)
     out = Image.fromarray(arr)
     out.save("median.jpg")
+    out.show()
+
+def meanComplete():
+    newpath = setpath('data/meanstaging')
+    allfiles = os.listdir(newpath)
+    print(newpath)
+    imlist = [filename for filename in allfiles if filename[-4:] in [".jpg"]]
+    images = numpy.array([numpy.array(Image.open(str(newpath) + '/' + fname)) for fname in imlist])
+    arr = numpy.array(numpy.mean(images, axis=(0)), dtype=numpy.uint8)
+    out = Image.fromarray(arr)
+    out.save("mean.jpg")
     out.show()
 
 def AveragePixels2(pth):
@@ -97,21 +134,29 @@ def AveragePixels2(pth):
 
 def AveragePixels(pth):
     # Access all jpg files in directory
-    pth = Path('data')
+    #pth = Path('data')
 
-    allfiles=os.listdir(os.getcwd())
+    allfiles=os.listdir(pth)
     print(allfiles)
     imlist=[filename for filename in allfiles if filename[-4:] in [".jpg"]]
 
-    AveragePixels2(imlist)
+    #AveragePixels2(imlist)
 
-    avg = Image.open(imlist[0])
+    avg = Image.open('data/'+ imlist[0])
     N = len(imlist)
     for i in range(1, N):
-        img = Image.open(imlist[i])
+        img = Image.open('data/'+ imlist[i])
         avg = Image.blend(avg, img, 1.0 / float(i + 1))
-    avg.save("Blend.png")
+    avg.save("Blend.jpg")
     avg.show()
+
+def imageBlend():
+    im1 = Image.open("3.jpg")
+    im2 = Image.open("5.jpg")
+    out = Image.blend(im1,im2,0.5)
+    out.save("blend.jpg")
+    out.show()
+
 
 def setpath(pth):
     mypath = Path(pth)
@@ -119,7 +164,11 @@ def setpath(pth):
 
 if __name__ == '__main__':
     amIrunning()
-    #getVidCap('driveclip1.mp4')
-    #AveragePixels2(setpath('data'))
-    MedianPixels3(setpath('data'), 25)
+    #getVidCap('OKGo1.mp4')
+    #MeanPixels3(setpath('data'), 80)
+    #MedianPixels3(setpath('data'), 80)
+    medianComplete()
+    meanComplete()
+    #AveragePixels(setpath('data'))
+    #imageBlend()
     exit()
