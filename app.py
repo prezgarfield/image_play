@@ -165,11 +165,11 @@ def setpath(pth):
 
 if __name__ == '__main__':
     amIrunning()
-    #getVidCap('drone_alps1.mp4')
+    getVidCap('287.mp4')
     #MeanPixels3(setpath('data/overflow'), 80)
-    #MedianPixels3(setpath('data'), 20)
-    #medianComplete()
-    meanComplete()
+    # MedianPixels3(setpath('data'), 20)
+    # medianComplete()
+    #meanComplete()
     #AveragePixels(setpath('data'))
     #imageBlend()
     exit()
